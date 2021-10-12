@@ -1,5 +1,9 @@
 class EmployeePayRollData {
 
+
+    errorFlag = 0;
+    errorMessage = "";
+
     get id() {
         return this._id;
     }
@@ -8,8 +12,11 @@ class EmployeePayRollData {
         let idRegex = RegExp('[1-9]{1}[0-9]*');
         if (idRegex.test(id))
             this._id = id;
-        else
-            throw 'Id is incorrect';
+        else {
+            this.errorFlag = 1;
+            this.errorMessage = this.errorMessage + "\n" + "ID is Incorrect!";
+        }
+
     }
 
     get name() {
@@ -20,8 +27,11 @@ class EmployeePayRollData {
         let nameRegex = RegExp('^[A-Z]{1}[a-zA-Z\\s]{2,}$');
         if (nameRegex.test(name))
             this._name = name;
-        else
-            throw 'Name is incorrect';
+        else {
+            this.errorFlag = 1;
+            this.errorMessage = this.errorMessage + "\n" + "Name is Incorrect!";
+        }
+
     }
 
     get profilePic() {
@@ -69,11 +79,18 @@ class EmployeePayRollData {
     }
 
     set startDate(startDate) {
-        let datee = new Date();
-        if (startDate <= datee) {
+        let maxOldDate = new Date(new Date().setDate(new Date().getDate() - 30));
+        console.log(maxOldDate, startDate);
+        if (startDate <= new Date() && startDate >= maxOldDate) {
             this._startDate = startDate;
-        } else
-            throw 'StartDate is incorrect';
+        } else {
+            if (this.errorFlag == 1) {
+                alert(this.errorMessage + "\n" + "Start Date is invalid - Should not be a future date or 30 days before!");
+            } else {
+                alert("Start Date is invalid - Should not be a future date or 30 days before!");
+            }
+            throw ("Errors Found! Check alert message");
+        }
     }
 
     toString() {
@@ -83,5 +100,4 @@ class EmployeePayRollData {
         return "Name = " + this.name + ", Gender = " + this.gender + ", ProfilePic = \"" + this.profilePic + "\", Department = [" + this.department + "], Salary = " + this.salary +
             ", StartDate = " + date + ", Note = \"" + this.note + "\"";
     }
-
 }
