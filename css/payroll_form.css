@@ -175,13 +175,13 @@ select+select {
     margin-left: 20px;
 }
 
-.submitButton:hover {
-    background: green;
+.cancelButton:hover {
+    background-color: red;
     color: white;
 }
 
-.cancelButton:hover {
-    background-color: red;
+.submitButton:hover {
+    background: green;
     color: white;
 }
 
