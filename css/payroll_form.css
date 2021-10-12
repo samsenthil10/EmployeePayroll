@@ -120,3 +120,112 @@ label {
     border-radius: 50%;
     margin-left: 12px;
 }
+
+select {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+    font: normal normal normal 16px Roboto;
+    letter-spacing: 0px;
+    color: #42515f;
+    background-color: transparent;
+}
+
+select+select {
+    margin-left: 50px;
+}
+
+.notesBlock {
+    margin-top: 36px;
+}
+
+.buttonParent {
+    display: flex;
+    margin-bottom: 10px;
+    justify-content: space-between;
+    margin-top: 36px;
+}
+
+.button {
+    font-size: 15px;
+    font-family: Roboto;
+    letter-spacing: 0px;
+    color: #42515f;
+    opacity: 1;
+    background: transparent;
+    border: none;
+    font-weight: 400;
+    width: 180px;
+    height: 53px;
+    border: 1px solid #707070;
+    cursor: pointer;
+    text-align: center;
+    background: #e2e2e2;
+    text-decoration: none;
+    border-radius: 8px;
+}
+
+.cancelButton {
+    padding-top: 15px;
+    padding-bottom: 13px;
+}
+
+.submitButton+.resetButton {
+    margin-left: 20px;
+}
+
+.submitButton:hover {
+    background: green;
+    color: white;
+}
+
+.cancelButton:hover {
+    background-color: red;
+    color: white;
+}
+
+.resetButton:hover {
+    background-color: yellow;
+    color: white;
+}
+
+@media only screen and (max-width:960px) {
+    .cancelButton {
+        margin-left: 0px;
+    }
+    .form {
+        width: 85%;
+        padding: 44px 20px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .form {
+        margin-top: 10px;
+    }
+    .row {
+        flex-direction: column;
+    }
+    .uploadButton {
+        justify-content: flex-start;
+    }
+    .profile-radio-content {
+        flex-flow: wrap;
+    }
+    .submit-reset {
+        width: 100%;
+        display: flex;
+        flex-grow: 1;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+    .submitButton {
+        margin: 0
+    }
+    .buttonParent {
+        flex-direction: column-reverse;
+        align-items: flex-start;
+    }
+}
