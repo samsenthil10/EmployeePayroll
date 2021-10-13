@@ -87,9 +87,10 @@ class EmployeePayRollData {
             if (this.errorFlag == 1) {
                 alert(this.errorMessage + "\n" + "Start Date is invalid - Should not be a future date or 30 days before!");
             } else {
+                this.errorFlag = 2;
                 alert("Start Date is invalid - Should not be a future date or 30 days before!");
             }
-            throw ("Errors Found! Check alert message");
+            throw ("Start Date is Incorrect!");
         }
     }
 
