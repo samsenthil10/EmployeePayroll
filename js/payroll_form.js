@@ -1,4 +1,5 @@
 window.addEventListener('DOMContentLoaded', (event) => {
+
     const salary = document.querySelector('#salary');
     const output = document.querySelector('.salary-output');
     output.textContent = salary.value;
@@ -6,15 +7,37 @@ window.addEventListener('DOMContentLoaded', (event) => {
         output.textContent = salary.value;
     });
 
+    const name = document.querySelector('#name');
+    const nameError = document.querySelector('.name-text-error');
+    name.addEventListener('input', function() {
+        let nameRegex = RegExp('^[A-Z][a-zA-Z]{2,}$')
+        if (nameRegex.test(name.value))
+            nameError.textContent = "";
+        else
+            nameError.textContent = "Name is Incorrect!";
+    });
 });
 
 const save = () => {
     let employeePayrollData;
     try {
         employeePayrollData = createEmployeePayroll();
+        createAndUpdateStorage(employeePayrollData);
     } catch (e) {
         return;
     }
+}
+
+function createAndUpdateStorage(employeePayrollData) {
+
+    let employeePayrollList = JSON.parse(localStorage.getItem("EmployeePayrollList"));
+    if (employeePayrollList != undefined) {
+        employeePayrollList.push(employeePayrollData);
+    } else {
+        employeePayrollList = [employeePayrollData]
+    }
+    alert(employeePayrollList.toString());
+    localStorage.setItem("EmployeePayrollList", JSON.stringify(employeePayrollList));
 }
 
 const createEmployeePayroll = () => {
