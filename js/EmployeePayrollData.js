@@ -1,8 +1,4 @@
-class EmployeePayRollData {
-
-
-    errorFlag = 0;
-    errorMessage = "";
+class EmployeePayrollData {
 
     get id() {
         return this._id;
@@ -13,8 +9,7 @@ class EmployeePayRollData {
         if (idRegex.test(id))
             this._id = id;
         else {
-            this.errorFlag = 1;
-            this.errorMessage = this.errorMessage + "\n" + "ID is Incorrect!";
+            throw "Id is Incorrect!"
         }
 
     }
@@ -24,12 +19,11 @@ class EmployeePayRollData {
     }
 
     set name(name) {
-        let nameRegex = RegExp('^[A-Z]{1}[a-zA-Z\\s]{2,}$');
+        let nameRegex = RegExp('^[A-Z]{1}[a-zA-Z ]{2,}$');
         if (nameRegex.test(name))
             this._name = name;
         else {
-            this.errorFlag = 1;
-            this.errorMessage = this.errorMessage + "\n" + "Name is Incorrect!";
+            throw "Name Is Incorrect!"
         }
 
     }
@@ -79,20 +73,23 @@ class EmployeePayRollData {
     }
 
     set startDate(startDate) {
-        let maxOldDate = new Date(new Date().setDate(new Date().getDate() - 30));
-        console.log(maxOldDate, startDate);
-        if (startDate <= new Date() && startDate >= maxOldDate) {
-            this._startDate = startDate;
-        } else {
-            if (this.errorFlag == 1) {
-                alert(this.errorMessage + "\n" + "Start Date is invalid - Should not be a future date or 30 days before!");
+
+        startDate = new Date(startDate)
+        var now = new Date();
+        var maximumPossibleDate = new Date(Date.now() - 31 * 24 * 60 * 60 * 1000);
+        var end = now;
+        if (!(startDate > now)) {
+            if (startDate >= maximumPossibleDate && startDate <= end) {
+                this._startDate = startDate;
             } else {
-                this.errorFlag = 2;
-                alert("Start Date is invalid - Should not be a future date or 30 days before!");
+                throw "Start Date Should Be Less Than 30 Days From Joining!";
             }
-            throw ("Start Date is Incorrect!");
+        } else {
+            throw "Start Date Cannot Be Future Date";
         }
+
     }
+
 
     toString() {
         const format = { year: 'numeric', month: 'long', day: 'numeric' };
