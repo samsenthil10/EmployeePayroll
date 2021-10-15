@@ -1,6 +1,7 @@
 body {
     margin: 0px;
     height: 100%;
+    text-transform: capitalize;
 }
 
 .header {
@@ -75,12 +76,14 @@ body {
 .emp-count {
     background-color: #82a70c;
     color: #ffffff;
-    border-radius: 100%;
-    font-size: 16px;
-    width: 26px;
+    border-radius: 13px;
+    font-size: 14px;
     text-align: center;
     display: inline;
-    padding: 3px 3px 1px 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 4px;
+    padding-bottom: 4px;
 }
 
 .add-button {
@@ -121,7 +124,6 @@ th {
 th {
     background: #42515f 0% 0% no-repeat padding-box;
     height: 48px;
-    /* border-radius: 3px 3px 0px 0px; */
     text-align: left;
     font: normal normal normal 18px/24px Roboto;
     letter-spacing: 0px;
@@ -159,8 +161,8 @@ td img {
 }
 
 .dept-label {
-    background-color: #e9fea5;
-    border-radius: 40%;
+    background-color: #E9FEA5;
+    border-radius: 13px;
     width: fit-content;
     padding: 1px 7px;
     text-align: center;
@@ -168,4 +170,8 @@ td img {
     display: inline-block;
     font-weight: 300;
     margin-bottom: 8px;
+}
+
+td:not(:first-child) {
+    padding-left: 10px;
 }

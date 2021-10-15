@@ -1,6 +1,7 @@
 body {
     margin: 0;
     height: 100%;
+    text-transform: capitalize;
 }
 
 .header {
@@ -153,7 +154,6 @@ select+select {
     font-size: 15px;
     font-family: Roboto;
     letter-spacing: 0px;
-    color: #42515f;
     opacity: 1;
     background: transparent;
     border: none;
@@ -163,7 +163,6 @@ select+select {
     border: 1px solid #707070;
     cursor: pointer;
     text-align: center;
-    background: #e2e2e2;
     text-decoration: none;
     border-radius: 8px;
 }
@@ -177,23 +176,28 @@ select+select {
     margin-left: 20px;
 }
 
-.cancelButton:hover {
+.cancelButton {
     background-color: red;
     color: white;
 }
 
-.submitButton:hover {
+.submitButton {
     background: green;
     color: white;
 }
 
-.resetButton:hover {
-    background-color: yellow;
+.resetButton {
+    background-color: lightsalmon;
     color: white;
 }
 
+.submitButton:disabled {
+    background: #e2e2e2;
+    color: #42515f;
+}
+
 error-output {
-    margin-left: 10px;
+    margin-left: 150px;
     font-size: 12px;
     font-style: italic;
     color: red;
