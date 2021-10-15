@@ -1,5 +1,8 @@
 window.addEventListener('DOMContentLoaded', (event) => {
 
+    const button = document.querySelector(".submitButton");
+    button.disabled = true;
+
     const salary = document.querySelector('#salary');
     const output = document.querySelector('.salary-output');
     output.textContent = salary.value;
@@ -8,13 +11,41 @@ window.addEventListener('DOMContentLoaded', (event) => {
     });
 
     const name = document.querySelector('#name');
-    const nameError = document.querySelector('.name-text-error');
+    const textError = document.querySelector('.name-text-error');
+
     name.addEventListener('input', function() {
-        let nameRegex = RegExp('^[A-Z][a-zA-Z]{2,}$')
-        if (nameRegex.test(name.value))
-            nameError.textContent = "";
-        else
-            nameError.textContent = "Name is Incorrect!";
+        if (name.value.length == 0) {
+            textError.textContent = "";
+            return;
+        }
+        try {
+
+            (new EmployeePayrollData()).name = name.value;
+            textError.textContent = "";
+        } catch (e) {
+            textError.textContent = e;
+            var pointer = document.getElementById("name");
+            pointer.scrollIntoView({ block: 'end', behavior: 'smooth' });
+        }
+    });
+
+    const startDate = document.querySelector(".date-selector");
+    const dateError = document.querySelector('.date-text-error');
+
+    startDate.addEventListener('input', function() {
+        const year = getInputValueById('#year');
+        const month = parseInt(getInputValueById('#month'));
+        const day = getInputValueById('#day');
+        const dateString = year + "/" + month + "/" + day;
+        try {
+            let employeePayrollData = new EmployeePayrollData();
+            employeePayrollData.startDate = dateString;
+            dateError.textContent = "";
+            button.disabled = false;
+
+        } catch (e) {
+            dateError.textContent = e;
+        }
     });
 });
 
@@ -38,10 +69,11 @@ function createAndUpdateStorage(employeePayrollData) {
     }
     alert(employeePayrollList.toString());
     localStorage.setItem("EmployeePayrollList", JSON.stringify(employeePayrollList));
+    resetForm();
 }
 
 const createEmployeePayroll = () => {
-    let employeePayrollData = new EmployeePayRollData();
+    let employeePayrollData = new EmployeePayrollData();
     employeePayrollData.name = getInputValueById('#name');
     employeePayrollData.profilePic = getSelectedValues('[name=profile]').pop();
     employeePayrollData.gender = getSelectedValues('[name=gender]').pop();
@@ -52,8 +84,6 @@ const createEmployeePayroll = () => {
     let month = parseInt(getInputValueById('#month')) - 1;
     let day = getInputValueById('#day');
     employeePayrollData.startDate = (new Date(year, month, day));
-    console.log(employeePayrollData.toString());
-    alert(employeePayrollData.toString());
     return employeePayrollData;
 }
 
@@ -64,7 +94,7 @@ const getInputValueById = (id) => {
 
 const getSelectedValues = (propertyValue) => {
     let allItems = document.querySelectorAll(propertyValue);
-    let selectedItems = new Array;
+    let selectedItems = new Array();
     allItems.forEach(item => {
         if (item.checked)
             selectedItems.push(item.value);
@@ -73,6 +103,9 @@ const getSelectedValues = (propertyValue) => {
 }
 
 const resetForm = () => {
+
+    const button = document.querySelector(".submitButton");
+    button.disabled = true;
     setValue('#name', '');
     unsetSelectedValues('[name=profile]');
     unsetSelectedValues('[name=gender]');
@@ -82,9 +115,12 @@ const resetForm = () => {
     setValue('#day', '1');
     setValue('#month', 'January');
     setValue('#year', '2020');
-    setErrorText(".name-text-error", "");
-    setErrorText(".date-text-error", "");
+    setValue(".name-text-error", "");
+    setValue(".date-text-error", "");
     setTextValue('.salary-output', "400000");
+    var pointer = document.getElementById("name");
+    pointer.scrollIntoView({ block: 'end', behavior: 'smooth' });
+
 }
 
 const unsetSelectedValues = (propertyValue) => {
