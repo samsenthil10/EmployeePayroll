@@ -170,7 +170,7 @@ const setSelectedValues = (propertyValue, value) => {
 }
 
 const checkForUpdate = () => {
-    const employeePayrollJson = localStorage.getItem("EditEmployeeList");
+    const employeePayrollJson = localStorage.getItem("EditedEmployeeList");
     isUpdate = employeePayrollJson ? true : false;
     if (!isUpdate) return;
     employeePayrollObject = JSON.parse(employeePayrollJson);

@@ -2,8 +2,38 @@ let empPayrollList;
 window.addEventListener('DOMContentLoaded', (event) => {
     empPayrollList = getEmployeePayrollDataFromStorage();
     document.querySelector(".emp-count").textContent = empPayrollList.length;
+    resolveUpdate();
     createInnerHtml();
 });
+
+const resolveUpdate = () => {
+
+    updatedEmployeePayrollList = localStorage.getItem('EditedEmployeeList') ? JSON.parse(localStorage.getItem('EditedEmployeeList')) : [];
+    empPayrollList = getEmployeePayrollDataFromStorage();
+    if (updatedEmployeePayrollList) {
+        for (const empPayrollData of empPayrollList) {
+            editedIndex = empPayrollList._id;
+        }
+        deleteIndex = editedIndex;
+        let empPayrollData = empPayrollList.find(employee => deleteIndex == employee._id);
+        if (!empPayrollData) return;
+        const index = empPayrollList.map(employee => employee._id)
+            .indexOf(empPayrollData._id);
+        console.log(index);
+        empPayrollList.splice(index, 1);
+        var pointer = 0;
+        empPayrollList.forEach(element => {
+            if (pointer == empPayrollList.length - 1)
+                element._id = editedIndex;
+            else
+                element._id = pointer;
+            pointer++;
+        });
+        document.querySelector(".emp-count").textContent = empPayrollList.length;
+        localStorage.setItem("EmployeePayrollList", JSON.stringify(empPayrollList));
+        localStorage.removeItem("EditedEmployeePlaylist");
+    }
+}
 
 const getEmployeePayrollDataFromStorage = () => {
     return localStorage.getItem('EmployeePayrollList') ? JSON.parse(localStorage.getItem('EmployeePayrollList')) : [];
@@ -70,9 +100,6 @@ const update = (node) => {
     editIndex = node.parentNode.parentNode.rowIndex - 1;
     let empPayrollData = empPayrollList.find(employee => editIndex == employee._id);
     if (!empPayrollData) return;
-    localStorage.setItem("EditEmployeeList", JSON.stringify(empPayrollData));
+    localStorage.setItem("EditedEmployeeList", JSON.stringify(empPayrollData));
     window.location.replace('../pages/payroll_form.html');
-    remove(editIndex);
-    empPayrollData = empPayrollList.find(employee => (empPayrollList.length) - 1 == employee._id)
-    empPayrollData._id = editIndex;
 }
