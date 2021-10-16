@@ -1,3 +1,6 @@
+let isUpdate = false;
+let employeePayrollObject = {};
+
 window.addEventListener('DOMContentLoaded', (event) => {
 
     const button = document.querySelector(".submitButton");
@@ -9,6 +12,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
     salary.addEventListener('input', function() {
         output.textContent = salary.value;
     });
+
+    checkForUpdate();
 
     const name = document.querySelector('#name');
     const textError = document.querySelector('.name-text-error');
@@ -122,9 +127,9 @@ const resetForm = () => {
     unsetSelectedValues('[id=department]');
     setValue('#salary', '');
     setValue('#notes', '');
-    setValue('#day', '1');
-    setValue('#month', 'January');
-    setValue('#year', '2020');
+    setValue('#day', '01');
+    setValue('#month', '01');
+    setValue('#year', '2021');
     const nameError = document.querySelector('.name-text-error')
     nameError.textContent = "";
     const dateError = document.querySelector('.date-text-error')
@@ -150,4 +155,46 @@ const setTextValue = (query, value) => {
 const setValue = (query, value) => {
     const element = document.querySelector(query);
     element.value = value;
+}
+
+const setSelectedValues = (propertyValue, value) => {
+    let allItems = document.querySelectorAll(propertyValue);
+    allItems.forEach(item => {
+        if (Array.isArray(value)) {
+            if (value.includes(item.value)) {
+                item.checked = true;
+            }
+        } else if (item.value === value)
+            item.checked = true;
+    });
+}
+
+const checkForUpdate = () => {
+    const employeePayrollJson = localStorage.getItem("EditEmployeeList");
+    isUpdate = employeePayrollJson ? true : false;
+    if (!isUpdate) return;
+    employeePayrollObject = JSON.parse(employeePayrollJson);
+    setForm();
+}
+
+const setForm = () => {
+    setValue('#name', employeePayrollObject._name);
+    setSelectedValues('[name=profile]', employeePayrollObject._profilePic);
+    setSelectedValues('[name=gender]', employeePayrollObject._gender);
+    setSelectedValues('[id=department]', employeePayrollObject._department);
+    setValue('#salary', employeePayrollObject._salary);
+    setTextValue('.salary-output', employeePayrollObject._salary);
+    setValue('#notes', employeePayrollObject._note);
+    let date = convertDate(employeePayrollObject._startDate);
+    let editedDate = date.toLocaleString().split("/");
+    setValue('#day', parseInt(editedDate[0]));
+    setValue('#month', parseInt(editedDate[1]));
+    setValue('#year', parseInt(editedDate[2]));
+}
+
+const convertDate = (date) => {
+    const options = { day: 'numeric', month: 'numeric', year: 'numeric' };
+    const newDate = !date ? "undefined" :
+        new Date(Date.parse(date)).toLocaleDateString('en-GB', options);
+    return newDate;
 }
