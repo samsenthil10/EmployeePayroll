@@ -13,7 +13,7 @@ const getEmployeePayrollDataFromStorage = () => {
 const createInnerHtml = () => {
 
     if (empPayrollList.length == 0)
-        return;
+        document.querySelector('#table-display').innerHTML = "";
 
     const headerHtml = "<tr><th></th><th>Name</th><th>Gender</th><th>Department</th><th>Salary</th><th>Start Date</th><th>Actions</th></tr>";
     let innerHtml = `${headerHtml}`;
@@ -45,4 +45,23 @@ const getDeptHtml = (deptList) => {
         deptHtml = `${deptHtml} <div class='dept-label'>${dept}</div>`;
     }
     return deptHtml;
+}
+
+const remove = (node) => {
+    deleteIndex = node.parentNode.parentNode.rowIndex - 1;
+    let empPayrollData = empPayrollList.find(employee => deleteIndex == employee._id);
+    if (!empPayrollData) return;
+    const index = empPayrollList.map(employee => employee._id)
+        .indexOf(empPayrollData._id);
+    console.log(index);
+    empPayrollList.splice(index, 1);
+    var pointer = 0;
+    empPayrollList.forEach(element => {
+        element._id = pointer;
+        pointer++;
+    });
+
+    document.querySelector(".emp-count").textContent = empPayrollList.length;
+    localStorage.setItem("EmployeePayrollList", JSON.stringify(empPayrollList));
+    createInnerHtml();
 }
