@@ -65,3 +65,14 @@ const remove = (node) => {
     localStorage.setItem("EmployeePayrollList", JSON.stringify(empPayrollList));
     createInnerHtml();
 }
+
+const update = (node) => {
+    editIndex = node.parentNode.parentNode.rowIndex - 1;
+    let empPayrollData = empPayrollList.find(employee => editIndex == employee._id);
+    if (!empPayrollData) return;
+    localStorage.setItem("EditEmployeeList", JSON.stringify(empPayrollData));
+    window.location.replace('../pages/payroll_form.html');
+    remove(editIndex);
+    empPayrollData = empPayrollList.find(employee => (empPayrollList.length) - 1 == employee._id)
+    empPayrollData._id = editIndex;
+}
