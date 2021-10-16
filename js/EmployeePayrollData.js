@@ -5,13 +5,7 @@ class EmployeePayrollData {
     }
 
     set id(id) {
-        let idRegex = RegExp('[1-9]{1}[0-9]*');
-        if (idRegex.test(id))
-            this._id = id;
-        else {
-            throw "Id is Incorrect!"
-        }
-
+        this._id = id;
     }
 
     get name() {
@@ -73,21 +67,12 @@ class EmployeePayrollData {
     }
 
     set startDate(startDate) {
-
-        startDate = new Date(startDate)
-        var now = new Date();
-        var maximumPossibleDate = new Date(Date.now() - 31 * 24 * 60 * 60 * 1000);
-        var end = now;
-        if (!(startDate > now)) {
-            if (startDate >= maximumPossibleDate && startDate <= end) {
-                this._startDate = startDate;
-            } else {
-                throw "Start Date Should Be Less Than 30 Days From Joining!";
-            }
-        } else {
-            throw "Start Date Cannot Be Future Date";
-        }
-
+        let now = new Date();
+        if (startDate > now) throw 'Start date is a future Date!';
+        var diff = Math.abs(now.getTime() - startDate.getTime());
+        if (diff / (1000 * 60 * 80 * 24) > 30)
+            throw 'Start Date is beyond 30 Days!';
+        this._startDate = startDate;
     }
 
 
@@ -95,7 +80,7 @@ class EmployeePayrollData {
         const format = { year: 'numeric', month: 'long', day: 'numeric' };
         const date = this.startDate === undefined ? "undefined" :
             this.startDate.toLocaleDateString("en-US", format);
-        return "Name = " + this.name + ", Gender = " + this.gender + ", ProfilePic = \"" + this.profilePic + "\", Department = [" + this.department + "], Salary = " + this.salary +
+        return "id= " + this.id + ", Name = " + this.name + ", Gender = " + this.gender + ", ProfilePic = \"" + this.profilePic + "\", Department = [" + this.department + "], Salary = " + this.salary +
             ", StartDate = " + date + ", Note = \"" + this.note + "\"";
     }
 }
