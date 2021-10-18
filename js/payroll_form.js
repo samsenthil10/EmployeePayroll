@@ -58,9 +58,26 @@ const save = (event) => {
     event.preventDefault();
     event.stopPropagation();
     setEmployeePayrollObject();
-    createAndUpdateStorage();
-    resetForm();
-    window.location.replace('../pages/payroll_home.html');
+    if (site_properties.use_local_storage.match("true")) {
+        createAndUpdateStorage();
+        resetForm();
+        window.location.replace('../pages/payroll_home.html');
+    } else {
+        createEmployeePayroll();
+    }
+}
+
+const createEmployeePayroll = () => {
+    let postURL = site_properties.server_url;
+    let methodCall = "POST";
+    makeServiceCall(methodCall, postURL, true, employeePayrollObject)
+        .then(data => {
+            resetForm();
+            window.location.replace(site_properties.home_page);
+        })
+        .catch(error => {
+            throw error;
+        });
 }
 
 const setEmployeePayrollObject = () => {
