@@ -63,13 +63,17 @@ const save = (event) => {
         resetForm();
         window.location.replace('../pages/payroll_home.html');
     } else {
-        createEmployeePayroll();
+        createOrUpdateEmployeePayroll();
     }
 }
 
-const createEmployeePayroll = () => {
+const createOrUpdateEmployeePayroll = () => {
     let postURL = site_properties.server_url;
     let methodCall = "POST";
+    if (isUpdate) {
+        methodCall = "PUT";
+        postURL = postURL + employeePayrollObject.id.toString();
+    }
     makeServiceCall(methodCall, postURL, true, employeePayrollObject)
         .then(data => {
             resetForm();

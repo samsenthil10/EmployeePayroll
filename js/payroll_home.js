@@ -68,7 +68,8 @@ const getDeptHtml = (deptList) => {
 }
 
 const remove = (node) => {
-    let empPayrollData = empPayrollList.find(employee => node.id == employee.id);
+    deleteIndex = node.parentNode.parentNode.rowIndex;
+    let empPayrollData = empPayrollList.find(employee => deleteIndex == employee.id);
     if (!empPayrollData) return;
     const index = empPayrollList.map(employee => employee.id)
         .indexOf(empPayrollData.id);
@@ -79,7 +80,8 @@ const remove = (node) => {
 }
 
 const update = (node) => {
-    let empPayrollData = empPayrollList.find(employee => node.id == employee.id);
+    editIndex = node.parentNode.parentNode.rowIndex;
+    let empPayrollData = empPayrollList.find(employee => editIndex == employee.id);
     if (!empPayrollData) return;
     localStorage.setItem("EditedEmployeeList", JSON.stringify(empPayrollData));
     window.location.replace('../pages/payroll_form.html');
