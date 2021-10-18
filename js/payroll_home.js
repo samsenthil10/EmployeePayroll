@@ -30,8 +30,8 @@ const createInnerHtml = () => {
             <td>₹ ${empPayrollData._salary}</td>
             <td>${dateString}</td>
             <td>
-                <img name="${empPayrollData._id}" onclick="remove(this)" alt="delete" src="../assets/icons/delete-black-18dp.svg">
-                <img name="${empPayrollData._id}" alt="edit" onclick="update(this)" src="../assets/icons/create-black-18dp.svg">
+                <img name="${empPayrollData.id}" onclick="remove(this)" alt="delete" src="../assets/icons/delete-black-18dp.svg">
+                <img name="${empPayrollData.id}" alt="edit" onclick="update(this)" src="../assets/icons/create-black-18dp.svg">
             </td>
         </tr>
         `;
@@ -49,15 +49,15 @@ const getDeptHtml = (deptList) => {
 
 const remove = (node) => {
     deleteIndex = node.parentNode.parentNode.rowIndex;
-    let empPayrollData = empPayrollList.find(employee => deleteIndex == employee._id);
+    let empPayrollData = empPayrollList.find(employee => deleteIndex == employee.id);
     if (!empPayrollData) return;
-    const index = empPayrollList.map(employee => employee._id)
-        .indexOf(empPayrollData._id);
+    const index = empPayrollList.map(employee => employee.id)
+        .indexOf(empPayrollData.id);
     console.log(index);
     empPayrollList.splice(index, 1);
     var pointer = 1;
     empPayrollList.forEach(element => {
-        element._id = pointer;
+        element.id = pointer;
         pointer++;
     });
 
@@ -68,7 +68,7 @@ const remove = (node) => {
 
 const update = (node) => {
     editIndex = node.parentNode.parentNode.rowIndex;
-    let empPayrollData = empPayrollList.find(employee => editIndex == employee._id);
+    let empPayrollData = empPayrollList.find(employee => editIndex == employee.id);
     if (!empPayrollData) return;
     localStorage.setItem("EditedEmployeeList", JSON.stringify(empPayrollData));
     window.location.replace('../pages/payroll_form.html');

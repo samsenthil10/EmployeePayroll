@@ -24,8 +24,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             return;
         }
         try {
-
-            (new EmployeePayrollData()).name = name.value;
+            checkName(name.value);
             textError.textContent = "";
         } catch (e) {
             textError.textContent = e;
@@ -42,14 +41,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
             dateError.textContent = "Date Invalid";
 
         } else {
-
             let dateString = getInputValueById("#year") + "-" + getInputValueById("#month") + "-" + getInputValueById("#day");
             try {
-                let employeePayrollData = new EmployeePayrollData();
-                employeePayrollData.startDate = new Date(Date.parse(dateString));
+                checkStartDate(new Date(Date.parse(dateString)));
                 dateError.textContent = "";
                 button.disabled = false;
-
             } catch (e) {
                 dateError.textContent = e;
             }
@@ -67,6 +63,10 @@ const save = (event) => {
 }
 
 const setEmployeePayrollObject = () => {
+
+    if (!isUpdate && site_properties.use_local_storage.match("true")) {
+        employeePayrollObj.id = createNewEmployeeId();
+    }
     employeePayrollObject._name = getInputValueById('#name');
     employeePayrollObject._profilePic = getSelectedValues('[name=profile]').pop();
     employeePayrollObject._gender = getSelectedValues('[name=gender]').pop();
@@ -79,22 +79,22 @@ const setEmployeePayrollObject = () => {
     employeePayrollObject._startDate = new Date(year, month, day);
 }
 
-function createAndUpdateStorage(employeePayrollData) {
+function createAndUpdateStorage() {
 
     let employeePayrollList = JSON.parse(localStorage.getItem("EmployeePayrollList"));
     console.log(employeePayrollList);
     if (employeePayrollList) {
         let empPayrollData = employeePayrollList.
-        find(employee => employee._id == employeePayrollObject._id);
+        find(employee => employee.id == employeePayrollObject.id);
         if (!empPayrollData)
-            employeePayrollList.push(createEmployeePayrollData());
+            employeePayrollList.push(employeePayrollObject);
         else {
-            const index = employeePayrollList.map(emp => emp._id)
-                .indexOf(empPayrollData._id);
-            employeePayrollList.splice(index, 1, createEmployeePayrollData(empPayrollData._id));
+            const index = employeePayrollList.map(emp => emp.id)
+                .indexOf(empPayrollData.id);
+            employeePayrollList.splice(index, 1, employeePayrollObject);
         }
     } else {
-        employeePayrollList = [createEmployeePayrollData()];
+        employeePayrollList = [employeePayrollObject];
     }
     localStorage.setItem("EmployeePayrollList", JSON.stringify(employeePayrollList));
     resetForm();
@@ -105,27 +105,6 @@ const createNewEmployeeId = () => {
     let empID = employeeList.length;
     empID = empID + 1;
     return empID;
-}
-
-const createEmployeePayrollData = (id) => {
-    let employeePayrollData = new EmployeePayrollData();
-    if (!id)
-        employeePayrollData.id = createNewEmployeeId();
-    else
-        employeePayrollData.id = id;
-    setEmployeePayrollData(employeePayrollData);
-    return employeePayrollData;
-}
-
-const setEmployeePayrollData = (employeePayrollData) => {
-
-    employeePayrollData.name = employeePayrollObject._name;
-    employeePayrollData.profilePic = employeePayrollObject._profilePic;
-    employeePayrollData.gender = employeePayrollObject._gender;
-    employeePayrollData.department = employeePayrollObject._department;
-    employeePayrollData.salary = employeePayrollObject._salary;
-    employeePayrollData.note = employeePayrollObject._note;
-    employeePayrollData.startDate = employeePayrollObject._startDate;
 }
 
 const getInputValueById = (id) => {
@@ -221,11 +200,4 @@ const setForm = () => {
     setValue('#day', parseInt(editedDate[0]));
     setValue('#month', parseInt(editedDate[1]));
     setValue('#year', parseInt(editedDate[2]));
-}
-
-const convertDate = (date) => {
-    const options = { day: 'numeric', month: 'numeric', year: 'numeric' };
-    const newDate = !date ? "undefined" :
-        new Date(Date.parse(date)).toLocaleDateString('en-GB', options);
-    return newDate;
 }
