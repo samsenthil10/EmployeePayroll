@@ -1,14 +1,34 @@
 let empPayrollList;
 window.addEventListener('DOMContentLoaded', (event) => {
-    empPayrollList = getEmployeePayrollDataFromStorage('EmployeePayrollList');
-    document.querySelector(".emp-count").textContent = empPayrollList.length;
-    createInnerHtml();
+    if (site_properties.use_local_storage.match("true")) {
+        getEmployeePayrollDataFromStorage();
+    } else {
+        getEmployeePayrollDataFromServer();
+    }
 });
 
-const getEmployeePayrollDataFromStorage = (key) => {
-    return localStorage.getItem(key) ? JSON.parse(localStorage.getItem(key)) : [];
+const processEmployeePayrollDataResponse = () => {
+    document.querySelector(".emp-count").textContent = empPayrollList.length;
+    createInnerHtml();
 }
 
+const getEmployeePayrollDataFromStorage = (key) => {
+    empPayrollList = localStorage.getItem("EmployeePayrollList") ?
+        JSON.parse(localStorage.getItem('EmployeePayrollList')) : [];
+    processEmployeePayrollDataResponse();
+}
+
+const getEmployeePayrollDataFromServer = () => {
+    makeServiceCall("GET", site_properties.server_url, true)
+        .then(data => {
+            empPayrollList = JSON.parse(data);
+            processEmployeePayrollDataResponse();
+        }).catch(error => {
+            console.log("GET Error Status: " + JSON.stringify(error));
+            empPayrollList = [];
+            processEmployeePayrollDataResponse();
+        });
+}
 
 const createInnerHtml = () => {
 
@@ -48,27 +68,18 @@ const getDeptHtml = (deptList) => {
 }
 
 const remove = (node) => {
-    deleteIndex = node.parentNode.parentNode.rowIndex;
-    let empPayrollData = empPayrollList.find(employee => deleteIndex == employee.id);
+    let empPayrollData = empPayrollList.find(employee => node.id == employee.id);
     if (!empPayrollData) return;
     const index = empPayrollList.map(employee => employee.id)
         .indexOf(empPayrollData.id);
-    console.log(index);
     empPayrollList.splice(index, 1);
-    var pointer = 1;
-    empPayrollList.forEach(element => {
-        element.id = pointer;
-        pointer++;
-    });
-
     document.querySelector(".emp-count").textContent = empPayrollList.length;
     localStorage.setItem("EmployeePayrollList", JSON.stringify(empPayrollList));
     createInnerHtml();
 }
 
 const update = (node) => {
-    editIndex = node.parentNode.parentNode.rowIndex;
-    let empPayrollData = empPayrollList.find(employee => editIndex == employee.id);
+    let empPayrollData = empPayrollList.find(employee => node.id == employee.id);
     if (!empPayrollData) return;
     localStorage.setItem("EditedEmployeeList", JSON.stringify(empPayrollData));
     window.location.replace('../pages/payroll_form.html');
